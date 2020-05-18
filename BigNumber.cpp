@@ -34,6 +34,12 @@ BigNumber::BigNumber ( const BigNumber & myBig ){
     }
 }
 
+BigNumber::BigNumber ( BigNumber && myBig ) noexcept
+        :sign{myBig.sign}, numOfDigits{myBig.numOfDigits}, numArray{myBig.numArray}
+{
+    myBig.numArray = nullptr;
+}
+
 BigNumber::~BigNumber(){
     delete [] numArray;
 }
@@ -42,7 +48,7 @@ BigNumber::~BigNumber(){
 unsigned BigNumber::numOfTrimCharsOnLeft(const std::string &str) {
     unsigned numOfChars = 0;
     size_t i = 0;
-    while( i < str.size() - 1 && str[i] == '0' || str[i] == '-' || str[i] == '+'){
+    while( (i < str.size() - 1 && str[i] == '0') || str[i] == '-' || str[i] == '+'){
         ++numOfChars;
         ++i;
     }
@@ -82,7 +88,7 @@ bool BigNumber::validate(const std::string &str, const std::string &pattern) {
 }
 
 std::ostream & operator<<( std::ostream & output, const BigNumber & myBig ){
-    if( myBig.sign == false ){
+    if(!myBig.sign){
         output << '-';
     }
     for( int i = myBig.numOfDigits - 1; i >= 0; --i){
@@ -156,12 +162,6 @@ bool BigNumber::operator!=(const BigNumber & myBig) const {
     return !(*this == myBig);
 }
 
-BigNumber::BigNumber ( BigNumber && myBig ) noexcept
-    :sign{myBig.sign}, numOfDigits{myBig.numOfDigits}, numArray{myBig.numArray}
-{
-    myBig.numArray = nullptr;
-}
-
 BigNumber & BigNumber:: operator=( BigNumber && rightNum) noexcept {
     if( &rightNum != this ){
         sign = rightNum.sign;
@@ -224,37 +224,37 @@ bool BigNumber:: unsignedLessOrEqual( const BigNumber& num1, const BigNumber& nu
 }
 
 bool BigNumber:: operator>=( const BigNumber & myBig) const{
-    if( sign == true && myBig.sign == false){
+    if(sign && !myBig.sign){
         return true;
     }
 
-    if( sign == false && myBig.sign == true){
+    if(!sign && myBig.sign){
         return false;
     }
 
-    if( sign == true && myBig.sign == true){
+    if(sign && myBig.sign){
         return unsignedGreaterOrEqual(*this, myBig);
     }
 
-    if( sign == false && myBig.sign == false){
+    if(!sign && !myBig.sign){
         return unsignedLessOrEqual(*this, myBig);
     }
 }
 
 bool BigNumber:: operator<=( const BigNumber & myBig) const{
-    if( sign == true && myBig.sign == false){
+    if(sign && !myBig.sign){
         return false;
     }
 
-    if( sign == false && myBig.sign == true){
+    if(!sign && myBig.sign){
         return true;
     }
 
-    if( sign == true && myBig.sign == true){
+    if(sign && myBig.sign){
         return unsignedLessOrEqual(*this, myBig);
     }
 
-    if( sign == false && myBig.sign == false){
+    if(!sign && !myBig.sign){
         return unsignedGreaterOrEqual(*this, myBig);
     }
 }
@@ -307,7 +307,6 @@ BigNumber BigNumber:: unsignedAdd( const BigNumber& num1, const BigNumber& num2 
         sum[i] = 1;
     }
     else if (carry == 0) {
-        //sum[i] = 0;
         sum.numOfDigits -= 1;
     }
 
@@ -363,7 +362,7 @@ BigNumber BigNumber:: unsignedSubtract( const BigNumber& num1, const BigNumber& 
 
 BigNumber operator+( const BigNumber & num1, const BigNumber & num2){
     BigNumber sum;
-    if(num1.sign == num2.sign){   // -5 + 5
+    if(num1.sign == num2.sign){
         sum = BigNumber:: unsignedAdd(num1, num2);
         sum.sign = num1.sign;
     }
@@ -375,6 +374,36 @@ BigNumber operator+( const BigNumber & num1, const BigNumber & num2){
         sum.sign = true;
     }
     return sum;
+}
+
+BigNumber operator-(const BigNumber &num1, const BigNumber &num2) {
+    BigNumber sub;
+    if( (num1.sign == num2.sign) && (num1.absoluteValue() > num2.absoluteValue()) ) {
+        sub = BigNumber:: unsignedSubtract(num1, num2);
+        sub.sign = BigNumber::unsignedMax(num1, num2).sign;
+    }
+    if ( (num1.sign == num2.sign) && (num1.sign) && (num1.absoluteValue() < num2.absoluteValue()) ){
+        sub = BigNumber:: unsignedSubtract(num1, num2);
+        sub.sign = false;
+    }
+    if ( (num1.sign == num2.sign) && (!num1.sign) && (num1.absoluteValue() < num2.absoluteValue()) ){
+        sub = BigNumber:: unsignedSubtract(num1, num2);
+        sub.sign = true;
+    }
+    if ( (num1.sign == num2.sign) && (num1.absoluteValue() == num2.absoluteValue()) ){
+        sub = BigNumber:: unsignedSubtract(num1, num2);
+        sub.sign = true;
+    }
+    if ( (num1.sign != num2.sign) && (!num2.sign) ){
+        sub = BigNumber:: unsignedAdd(num1, num2);
+        sub.sign = true;
+    }
+    if ( (num1.sign != num2.sign) && (num2.sign) ){
+        sub = BigNumber:: unsignedAdd(num1, num2);
+        sub.sign = false;
+    }
+
+    return sub;
 }
 
 BigNumber BigNumber:: operator>>( unsigned shift ){
@@ -397,3 +426,5 @@ BigNumber BigNumber:: operator>>( unsigned shift ){
     }
     return temp;
 }
+
+
