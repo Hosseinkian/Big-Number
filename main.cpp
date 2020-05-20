@@ -2,14 +2,11 @@
 #include <cstdint>
 
 #include "BigNumber.h"
+#include "MyBigNumber.h"
 
 using namespace std;
 
 int main() {
-    BigNumber myBig = "12340";
-    cout << myBig++ << endl;
-    cout << myBig-- << endl;
-    cout << --myBig << endl;
-    cout << ++myBig << endl;
+    MyBigNumber myBig = "-82222222";
     return 0;
 }

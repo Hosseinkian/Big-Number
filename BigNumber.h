@@ -17,7 +17,7 @@ protected:
 
     bool validate( const std::string & str, const std::string & pattern);
     unsigned numOfTrimCharsOnLeft( const std::string & str );
-    BigNumber(){}
+
     int8_t& operator[](size_t index);
 
     static BigNumber unsignedMax( const BigNumber& num1, const BigNumber& num2);
@@ -26,6 +26,8 @@ protected:
     static bool unsignedLessOrEqual( const BigNumber& num1, const BigNumber& num2);
     static BigNumber unsignedAdd( const BigNumber& num1, const BigNumber& num2 );
     static BigNumber unsignedSubtract( const BigNumber& num1, const BigNumber& num2 );
+
+    BigNumber(){}
 
 public:
     BigNumber( const std::string & str );
