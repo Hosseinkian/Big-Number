@@ -2,7 +2,7 @@
 
 using namespace std;
 
-BigNumber MyBigNumber::unsignedMultiplyOneDigit(int coefficient) {
+MyBigNumber MyBigNumber::unsignedMultiplyOneDigit(int coefficient) {
     MyBigNumber product;
     product.sign = true;
     product.numOfDigits = numOfDigits + 1;
@@ -39,7 +39,7 @@ BigNumber MyBigNumber::unsignedMultiplyOneDigit(int coefficient) {
     return multi;
 }
 
-BigNumber MyBigNumber::multByOneDigit(int coefficient) {
+MyBigNumber MyBigNumber::multByOneDigit(int coefficient) {
     MyBigNumber product;
     if ( coefficient == 0 ){
       product = unsignedMultiplyOneDigit( 0 );
@@ -62,7 +62,7 @@ BigNumber MyBigNumber::multByOneDigit(int coefficient) {
 }
 
 
-BigNumber MyBigNumber:: operator<<( unsigned shift ) {
+MyBigNumber MyBigNumber:: operator<<( unsigned shift ) {
     if (shift == 0 ){
         return *this;
     }
@@ -79,6 +79,40 @@ BigNumber MyBigNumber:: operator<<( unsigned shift ) {
         }
         return temp;
     }
+}
+
+MyBigNumber operator*( MyBigNumber &bigNum1, MyBigNumber & bigNum2) {
+    MyBigNumber Product="0";
+    if(bigNum1=="0" || bigNum2=="0" || (bigNum1 == "0" && bigNum2 == "0")){
+        Product="0";
+        Product.sign=true;
+    }
+
+    if(bigNum1.sign==bigNum2.sign){
+        unsigned int i = 0;
+        for(; i < bigNum2.numOfDigits; i++){
+            Product= Product + (bigNum1 << i).multByOneDigit(bigNum2[i]);
+        }
+        Product.sign=true;
+    }
+
+    if(!bigNum1.sign && bigNum2.sign){
+        unsigned int j=0;
+        for(; j < bigNum2.numOfDigits; j++){
+            Product= Product + (bigNum1 << j).multByOneDigit(bigNum2[j]);
+        }
+        Product.sign=bigNum1.sign;
+    }
+
+    if(bigNum1.sign && !bigNum2.sign){
+        unsigned int k=0;
+        for(; k < bigNum2.numOfDigits; k++){
+            Product= Product + (bigNum1 << k).multByOneDigit(bigNum2[k]);
+        }
+        Product.sign=bigNum2.sign;
+    }
+
+    return Product;
 }
 
 
