@@ -62,15 +62,23 @@ BigNumber MyBigNumber::multByOneDigit(int coefficient) {
 }
 
 
-//BigNumber MyBigNumber:: operator<<( unsigned shift ) {
-//    MyBigNumber temp;
-//    temp.sign = sign;
-//    temp.numOfDigits = numOfDigits + shift;
-//    temp.numArray = new int8_t[temp.numOfDigits];
-//    for (size_t i{numOfDigits}; i < temp.numOfDigits; ++i) {
-//        temp
-//    }
-//    return temp;
-//}
+BigNumber MyBigNumber:: operator<<( unsigned shift ) {
+    if (shift == 0 ){
+        return *this;
+    }
+    else {
+        MyBigNumber temp;
+        temp.sign = sign;
+        temp.numOfDigits = numOfDigits + shift;
+        temp.numArray = new int8_t[temp.numOfDigits];
+        for (size_t i{0}; i < shift; ++i) {
+            temp[i] = 0;
+        }
+        for (size_t j {shift}; j < temp.numOfDigits ; ++j){
+            temp [j] = numArray[j - shift];
+        }
+        return temp;
+    }
+}
 
 
