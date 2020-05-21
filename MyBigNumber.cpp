@@ -115,4 +115,18 @@ MyBigNumber operator*( MyBigNumber &bigNum1, MyBigNumber & bigNum2) {
     return Product;
 }
 
+MyBigNumber MyBigNumber::power(unsigned int number) {
+    if (number < 0) {
+        throw invalid_argument("Number must be non-negative!");
+    }
 
+    MyBigNumber Temp = 1;
+    if (number == 0){
+        Temp = 1;
+    }
+
+    for (size_t i{1}; i <= number; ++i) {
+        Temp = Temp * (*this);
+    }
+    return Temp;
+}

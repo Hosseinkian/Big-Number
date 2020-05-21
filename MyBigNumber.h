@@ -17,6 +17,7 @@ public:
     MyBigNumber ( BigNumber && myBig ) noexcept : BigNumber ( myBig ){};  // move constructor
     MyBigNumber operator<<( unsigned shift );
     MyBigNumber multByOneDigit( int coefficient );
+    MyBigNumber power ( unsigned number );
 };
 
 #endif
