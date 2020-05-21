@@ -18,6 +18,7 @@ public:
     MyBigNumber operator<<( unsigned shift );
     MyBigNumber multByOneDigit( int coefficient );
     MyBigNumber power ( unsigned number );
+    MyBigNumber operator() ( unsigned start , unsigned count);
 };
 
 #endif

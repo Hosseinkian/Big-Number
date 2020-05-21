@@ -90,7 +90,7 @@ MyBigNumber operator*( MyBigNumber &bigNum1, MyBigNumber & bigNum2) {
 
     if(bigNum1.sign==bigNum2.sign){
         unsigned int i = 0;
-        for(; i < bigNum2.numOfDigits; i++){
+        for(; i < bigNum2.numOfDigits; ++i){
             Product= Product + (bigNum1 << i).multByOneDigit(bigNum2[i]);
         }
         Product.sign=true;
@@ -98,7 +98,7 @@ MyBigNumber operator*( MyBigNumber &bigNum1, MyBigNumber & bigNum2) {
 
     if(!bigNum1.sign && bigNum2.sign){
         unsigned int j=0;
-        for(; j < bigNum2.numOfDigits; j++){
+        for(; j < bigNum2.numOfDigits; ++j){
             Product= Product + (bigNum1 << j).multByOneDigit(bigNum2[j]);
         }
         Product.sign=bigNum1.sign;
@@ -106,7 +106,7 @@ MyBigNumber operator*( MyBigNumber &bigNum1, MyBigNumber & bigNum2) {
 
     if(bigNum1.sign && !bigNum2.sign){
         unsigned int k=0;
-        for(; k < bigNum2.numOfDigits; k++){
+        for(; k < bigNum2.numOfDigits; ++k){
             Product= Product + (bigNum1 << k).multByOneDigit(bigNum2[k]);
         }
         Product.sign=bigNum2.sign;
@@ -129,4 +129,15 @@ MyBigNumber MyBigNumber::power(unsigned int number) {
         Temp = Temp * (*this);
     }
     return Temp;
+}
+
+MyBigNumber MyBigNumber::operator()(unsigned start, unsigned count) {
+    MyBigNumber slice;
+    slice.sign = (*this).sign;
+    slice.numOfDigits = count;
+    slice.numArray = new int8_t [slice.numOfDigits];
+    for (size_t i{0} ; i < count ; ++i){
+        slice[i] = numArray[start - count + i + 1];
+    }
+    return slice;
 }

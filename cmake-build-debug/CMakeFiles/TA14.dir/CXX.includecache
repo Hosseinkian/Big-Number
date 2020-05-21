@@ -23,8 +23,6 @@ string
 /cygdrive/c/Users/Hossein/CLionProjects/BigNumber/main.cpp
 iostream
 -
-cstdint
--
 BigNumber.h
 /cygdrive/c/Users/Hossein/CLionProjects/BigNumber/BigNumber.h
 MyBigNumber.h
